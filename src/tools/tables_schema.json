@@ -1,0 +1,1212 @@
+[
+  {
+    "table_name": "cars",
+    "description": "A comprehensive automotive database table that stores detailed specifications and characteristics of various car models, including performance metrics, engine specifications, pricing information, and technical details for comparison and analysis purposes.",
+    "columns": [
+      {
+        "column_name": "Id",
+        "data_type": "bigint",
+        "max_length": null,
+        "is_nullable": "NO",
+        "default_value": null,
+        "description": "Primary key identifier that uniquely identifies each car record in the database"
+      },
+      {
+        "column_name": "Company Names",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "The manufacturer or brand name of the vehicle (e.g., Toyota, BMW, Mercedes-Benz, Ford)"
+      },
+      {
+        "column_name": "Cars Names",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "The specific model name or designation of the vehicle (e.g., Camry, X5, C-Class, Mustang)"
+      },
+      {
+        "column_name": "Engines",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Engine type and configuration details such as engine layout, cylinder count, or engine technology (e.g., V6, I4 Turbo, Hybrid, Electric Motor)"
+      },
+      {
+        "column_name": "CC/Battery Capacity",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Engine displacement in cubic centimeters (CC) for internal combustion engines or battery capacity in kWh for electric vehicles"
+      },
+      {
+        "column_name": "HorsePower",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Maximum power output of the vehicle's engine or motor measured in horsepower (HP) or brake horsepower (BHP)"
+      },
+      {
+        "column_name": "Total Speed",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Maximum top speed capability of the vehicle, typically measured in kilometers per hour (KM/H) or miles per hour (MPH)"
+      },
+      {
+        "column_name": "Performance(0 - 100 )KM/H",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Acceleration performance metric measuring the time in seconds required for the vehicle to accelerate from 0 to 100 kilometers per hour"
+      },
+      {
+        "column_name": "Cars Prices",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Market price or cost of the vehicle, which may include base price, starting price, or price range in local currency"
+      },
+      {
+        "column_name": "Fuel Types",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Type of fuel or energy source used by the vehicle (e.g., Petrol/Gasoline, Diesel, Hybrid, Electric, CNG, LPG)"
+      },
+      {
+        "column_name": "Seats",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Seating capacity indicating the maximum number of passengers the vehicle can accommodate"
+      },
+      {
+        "column_name": "Torque",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Maximum torque output of the vehicle's engine or motor, typically measured in Newton-meters (Nm) or pound-feet (lb-ft), indicating the rotational force capability"
+      }
+    ]
+  },
+  {
+    "table_name": "icrisat_dataset",
+    "description": "Agricultural dataset containing comprehensive crop statistics including area, production, and yield data for various crops across different districts and states in India, sourced from ICRISAT (International Crops Research Institute for the Semi-Arid Tropics)",
+    "columns": [
+      {
+        "column_name": "ID",
+        "data_type": "bigint",
+        "max_length": null,
+        "is_nullable": "NO",
+        "default_value": null,
+        "description": "Unique identifier for each record in the dataset, serving as the primary key"
+      },
+      {
+        "column_name": "Dist Code",
+        "data_type": "bigint",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Numerical code assigned to identify specific districts within states"
+      },
+      {
+        "column_name": "Year",
+        "data_type": "bigint",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Year for which the agricultural data is recorded"
+      },
+      {
+        "column_name": "State Code",
+        "data_type": "bigint",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Numerical code assigned to identify specific states in India"
+      },
+      {
+        "column_name": "State Name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the state where the agricultural data was collected"
+      },
+      {
+        "column_name": "Dist Name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the district within the state where the agricultural data was collected"
+      },
+      {
+        "column_name": "RICE AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under rice cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "RICE PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total rice production measured in thousands of tons"
+      },
+      {
+        "column_name": "RICE YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Rice productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "WHEAT AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under wheat cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "WHEAT PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total wheat production measured in thousands of tons"
+      },
+      {
+        "column_name": "WHEAT YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Wheat productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "KHARIF SORGHUM AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under Kharif season sorghum cultivation measured in thousands of hectares (monsoon season crop)"
+      },
+      {
+        "column_name": "KHARIF SORGHUM PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total Kharif season sorghum production measured in thousands of tons"
+      },
+      {
+        "column_name": "KHARIF SORGHUM YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Kharif sorghum productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "RABI SORGHUM AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under Rabi season sorghum cultivation measured in thousands of hectares (winter season crop)"
+      },
+      {
+        "column_name": "RABI SORGHUM PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total Rabi season sorghum production measured in thousands of tons"
+      },
+      {
+        "column_name": "RABI SORGHUM YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Rabi sorghum productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "SORGHUM AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total combined area under sorghum cultivation (both Kharif and Rabi seasons) measured in thousands of hectares"
+      },
+      {
+        "column_name": "SORGHUM PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total combined sorghum production (both Kharif and Rabi seasons) measured in thousands of tons"
+      },
+      {
+        "column_name": "SORGHUM YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Overall sorghum productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "PEARL MILLET AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under pearl millet cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "PEARL MILLET PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total pearl millet production measured in thousands of tons"
+      },
+      {
+        "column_name": "PEARL MILLET YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Pearl millet productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "MAIZE AREA (1000 ha)",
+        "data_type": "double precision",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under maize cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "MAIZE PRODUCTION (1000 tons)",
+        "data_type": "double precision",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total maize production measured in thousands of tons"
+      },
+      {
+        "column_name": "MAIZE YIELD (Kg per ha)",
+        "data_type": "double precision",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Maize productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "FINGER MILLET AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under finger millet cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "FINGER MILLET PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total finger millet production measured in thousands of tons"
+      },
+      {
+        "column_name": "FINGER MILLET YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Finger millet productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "BARLEY AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under barley cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "BARLEY PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total barley production measured in thousands of tons"
+      },
+      {
+        "column_name": "BARLEY YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Barley productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "CHICKPEA AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under chickpea cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "CHICKPEA PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total chickpea production measured in thousands of tons"
+      },
+      {
+        "column_name": "CHICKPEA YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Chickpea productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "PIGEONPEA AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under pigeonpea cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "PIGEONPEA PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total pigeonpea production measured in thousands of tons"
+      },
+      {
+        "column_name": "PIGEONPEA YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Pigeonpea productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "MINOR PULSES AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under cultivation of minor pulse crops measured in thousands of hectares"
+      },
+      {
+        "column_name": "MINOR PULSES PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total production of minor pulse crops measured in thousands of tons"
+      },
+      {
+        "column_name": "MINOR PULSES YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Minor pulses productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "GROUNDNUT AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under groundnut cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "GROUNDNUT PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total groundnut production measured in thousands of tons"
+      },
+      {
+        "column_name": "GROUNDNUT YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Groundnut productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "SESAMUM AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under sesamum (sesame) cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "SESAMUM PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total sesamum (sesame) production measured in thousands of tons"
+      },
+      {
+        "column_name": "SESAMUM YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Sesamum (sesame) productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "RAPESEED AND MUSTARD AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under rapeseed and mustard cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "RAPESEED AND MUSTARD PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total rapeseed and mustard production measured in thousands of tons"
+      },
+      {
+        "column_name": "RAPESEED AND MUSTARD YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Rapeseed and mustard productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "SAFFLOWER AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under safflower cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "SAFFLOWER PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total safflower production measured in thousands of tons"
+      },
+      {
+        "column_name": "SAFFLOWER YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Safflower productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "CASTOR AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under castor cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "CASTOR PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total castor production measured in thousands of tons"
+      },
+      {
+        "column_name": "CASTOR YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Castor productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "LINSEED AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under linseed cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "LINSEED PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total linseed production measured in thousands of tons"
+      },
+      {
+        "column_name": "LINSEED YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Linseed productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "SUNFLOWER AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under sunflower cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "SUNFLOWER PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total sunflower production measured in thousands of tons"
+      },
+      {
+        "column_name": "SUNFLOWER YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Sunflower productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "SOYABEAN AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under soyabean cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "SOYABEAN PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total soyabean production measured in thousands of tons"
+      },
+      {
+        "column_name": "SOYABEAN YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Soyabean productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "OILSEEDS AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total combined area under all oilseed crops cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "OILSEEDS PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total combined production of all oilseed crops measured in thousands of tons"
+      },
+      {
+        "column_name": "OILSEEDS YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Overall oilseeds productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "SUGARCANE AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under sugarcane cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "SUGARCANE PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total sugarcane production measured in thousands of tons"
+      },
+      {
+        "column_name": "SUGARCANE YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Sugarcane productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "COTTON AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under cotton cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "COTTON PRODUCTION (1000 tons)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total cotton production measured in thousands of tons"
+      },
+      {
+        "column_name": "COTTON YIELD (Kg per ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Cotton productivity measured as kilograms produced per hectare of cultivated area"
+      },
+      {
+        "column_name": "FRUITS AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under fruit cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "VEGETABLES AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under vegetable cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "FRUITS AND VEGETABLES AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total combined area under fruits and vegetables cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "POTATOES AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under potato cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "ONION AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under onion cultivation measured in thousands of hectares"
+      },
+      {
+        "column_name": "FODDER AREA (1000 ha)",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total area under fodder crop cultivation measured in thousands of hectares"
+      }
+    ]
+  },
+  {
+    "table_name": "water_bodies",
+    "description": "A comprehensive database table containing detailed information about water bodies across India, including their geographical location, characteristics, ownership, usage status, infrastructure details, and community benefits. This table supports water resource management and planning by tracking physical attributes, construction/renovation history, and socio-economic impact of various water bodies.",
+    "columns": [
+      {
+        "column_name": "ID",
+        "data_type": "bigint",
+        "max_length": null,
+        "is_nullable": "NO",
+        "default_value": null,
+        "description": "Primary key identifier for each water body record, providing unique identification for database operations and referential integrity."
+      },
+      {
+        "column_name": "rural_or_urban",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Classification of the area where the water body is located, indicating whether it is situated in a rural or urban environment, which affects usage patterns and management approaches."
+      },
+      {
+        "column_name": "State Name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the Indian state where the water body is located, providing the primary administrative geographical context for regional water resource management."
+      },
+      {
+        "column_name": "District Name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the district within the state where the water body is situated, providing secondary administrative geographical boundary information for local governance and resource allocation."
+      },
+      {
+        "column_name": "Block/Tehsil Name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the block or tehsil (sub-district administrative unit) where the water body is located, providing tertiary administrative geographical detail for grassroots level management."
+      },
+      {
+        "column_name": "Village Name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the village where the water body is located, applicable for rural areas and providing the most specific geographical location for community-level water resource identification."
+      },
+      {
+        "column_name": "town_municipalty_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the town or municipality where the water body is located, applicable for urban areas and providing municipal-level administrative context for water body management."
+      },
+      {
+        "column_name": "ward_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the ward (smallest urban administrative unit) where the water body is situated, providing micro-level geographical identification within municipal boundaries."
+      },
+      {
+        "column_name": "si_no_of_water_body_within_village_town",
+        "data_type": "bigint",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Serial number assigned to the water body within its specific village or town, used for local enumeration and systematic identification of multiple water bodies in the same locality."
+      },
+      {
+        "column_name": "unique_id",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Unique identifier code assigned to each water body for standardized referencing across different systems and databases, ensuring consistent identification in various administrative contexts."
+      },
+      {
+        "column_name": "water_body_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Common or official name of the water body as known locally or administratively, providing human-readable identification and cultural context."
+      },
+      {
+        "column_name": "basin_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the major river basin or watershed system to which the water body belongs, providing hydrological context for water resource planning and management."
+      },
+      {
+        "column_name": "sub_basin_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Name of the sub-basin within the major basin system, providing more specific hydrological classification and drainage pattern information for the water body."
+      },
+      {
+        "column_name": "ref_water_body_type_id_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Classification type of the water body (e.g., tank, pond, lake, reservoir), defining its primary functional and structural characteristics for management and planning purposes."
+      },
+      {
+        "column_name": "nature_of_storage",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Description of how the water body stores water (e.g., perennial, seasonal, intermittent), indicating its water retention characteristics and reliability for various uses."
+      },
+      {
+        "column_name": "khasra_number",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Land survey number or plot identification from revenue records, providing legal land ownership and boundary information for the water body's location."
+      },
+      {
+        "column_name": "latitude_dec",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Latitude coordinate in decimal degrees format, providing precise north-south geographical positioning of the water body for mapping and GIS applications."
+      },
+      {
+        "column_name": "longitude_dec",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Longitude coordinate in decimal degrees format, providing precise east-west geographical positioning of the water body for mapping and GIS applications."
+      },
+      {
+        "column_name": "water_body_loc_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Descriptive name or landmark-based location identifier for the water body, providing additional contextual information about its specific geographical position."
+      },
+      {
+        "column_name": "water_body_ownership_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Type of ownership or controlling authority of the water body (e.g., government, private, community), defining legal responsibility and management authority."
+      },
+      {
+        "column_name": "ref_water_body_in_use_id_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Current operational status of the water body, indicating whether it is actively being used for its intended purposes or is non-functional."
+      },
+      {
+        "column_name": "ref_reason_water_body_in_use_id1_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Primary reason explaining the current usage status of the water body, providing insight into operational challenges or success factors."
+      },
+      {
+        "column_name": "cca_water_body",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Culturable Command Area of the water body, indicating the total agricultural area that can potentially be irrigated by this water source."
+      },
+      {
+        "column_name": "ipc_water_body",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Irrigation Potential Created by the water body, representing the actual agricultural area that has been developed for irrigation using this water source."
+      },
+      {
+        "column_name": "scheme_status_reason_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Status and reasoning related to any development or improvement schemes associated with the water body, indicating planning and implementation progress."
+      },
+      {
+        "column_name": "water_body_nature_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Natural characteristics classification of the water body (e.g., natural, artificial, modified natural), defining its origin and formation type."
+      },
+      {
+        "column_name": "manmade_water_body_type_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Specific type classification for artificially constructed water bodies, providing detailed categorization of human-engineered water storage structures."
+      },
+      {
+        "column_name": "construcion_year",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Year when the water body was originally constructed or established, providing historical timeline information for age assessment and maintenance planning."
+      },
+      {
+        "column_name": "construction_cost",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total financial investment made during the original construction of the water body, providing economic valuation and cost-benefit analysis data."
+      },
+      {
+        "column_name": "renovation_year",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Most recent year when significant renovation or rehabilitation work was carried out on the water body, indicating maintenance timeline and intervention history."
+      },
+      {
+        "column_name": "renovation_cost",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Financial expenditure incurred during the most recent renovation or rehabilitation of the water body, providing cost tracking for maintenance activities."
+      },
+      {
+        "column_name": "ref_water_body_under_repair_renovation_restoration_id_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Current status indicating whether the water body is undergoing repair, renovation, or restoration activities, providing real-time operational status information."
+      },
+      {
+        "column_name": "scheme_under_revival_is_done",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Completion status of any revival scheme implemented for the water body, indicating whether restoration efforts have been successfully completed."
+      },
+      {
+        "column_name": "scheme_inclusion_year",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Year when the water body was included in a government development or revival scheme, marking the beginning of planned improvement interventions."
+      },
+      {
+        "column_name": "targeted_completion_year",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Planned year for completion of ongoing development or revival activities, providing timeline expectations for project completion."
+      },
+      {
+        "column_name": "estimated_cost",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Projected financial investment required for planned development or revival activities, providing budget planning and resource allocation information."
+      },
+      {
+        "column_name": "target_potential_revival",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Intended irrigation potential or benefit capacity that will be achieved through planned revival or development activities."
+      },
+      {
+        "column_name": "irrigation_potential_revived",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Actual irrigation potential that has been successfully restored or enhanced through completed revival activities, measuring achievement against targets."
+      },
+      {
+        "column_name": "water_spread_area_of_water_body",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Surface area covered by water when the water body is at full capacity, providing information about the physical extent and storage footprint."
+      },
+      {
+        "column_name": "max_depth_water_body_fully_filled",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Maximum depth of water when the water body is completely filled to capacity, indicating vertical storage dimension and volume calculation parameter."
+      },
+      {
+        "column_name": "storage_capacity_water_body_original",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Original designed water storage capacity of the water body when first constructed, providing baseline capacity information for comparison and assessment."
+      },
+      {
+        "column_name": "storage_capacity_water_body_present",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Current actual water storage capacity of the water body, reflecting any reduction due to siltation or increase due to improvements."
+      },
+      {
+        "column_name": "filled_up_storage_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Current water level status or filling category of the water body, indicating how much of the total capacity is currently occupied by water."
+      },
+      {
+        "column_name": "filled_up_storage_space_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Detailed description of the current water storage space utilization, providing specific information about water level and available storage capacity."
+      },
+      {
+        "column_name": "no_town_cities_benefited",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Number of towns and cities that receive benefits (water supply, irrigation, etc.) from this water body, quantifying urban area coverage and impact."
+      },
+      {
+        "column_name": "no_villages_benefited",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Number of villages that receive benefits (irrigation, drinking water, etc.) from this water body, quantifying rural area coverage and community impact."
+      },
+      {
+        "column_name": "no_people_benefited_by_water_body",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total population count that directly or indirectly benefits from the services provided by this water body, measuring social and economic impact."
+      },
+      {
+        "column_name": "ref_selection_id_wua_exists_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Indicates whether a Water Users Association (WUA) exists for this water body, showing community organization level for participatory water management."
+      },
+      {
+        "column_name": "extent_of_area_covered_by_wua",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Geographical area or command area managed by the Water Users Association, defining the scope of community-based water resource management."
+      },
+      {
+        "column_name": "number_of_wua_formed",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Total count of Water Users Associations established for this water body, indicating level of community organization and stakeholder participation."
+      },
+      {
+        "column_name": "ref_selection_id_dip_sip_exists_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Indicates existence of Detailed Investigation Plan (DIP) or System Improvement Plan (SIP) for the water body, showing technical planning and assessment status."
+      },
+      {
+        "column_name": "ref_selection_id_water_body_encroached_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Status indicating whether the water body area has been encroached upon by unauthorized activities or constructions, highlighting land use conflicts."
+      },
+      {
+        "column_name": "ref_selection_id_encroachment_assessed_name",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Status indicating whether encroachment issues have been formally assessed or surveyed, showing administrative response to land use violations."
+      },
+      {
+        "column_name": "area_encroached_percentage",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Percentage of the total water body area that has been encroached upon, quantifying the extent of unauthorized land use and its impact on water storage."
+      },
+      {
+        "column_name": "reason_water_body_in_use_name2",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Secondary reason explaining the current usage status of the water body, providing additional context beyond the primary reason for operational conditions."
+      },
+      {
+        "column_name": "reason_water_body_in_use_name3",
+        "data_type": "text",
+        "max_length": null,
+        "is_nullable": "YES",
+        "default_value": null,
+        "description": "Tertiary reason explaining the current usage status of the water body, providing comprehensive understanding of multiple factors affecting operational status."
+      }
+    ]
+  }
+]
