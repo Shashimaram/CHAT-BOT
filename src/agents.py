@@ -103,4 +103,3 @@ def visualiation_agent(query: str) -> str:
         return visualization_agent(query)
     except Exception as e:
         return f"Error: {e}"
-

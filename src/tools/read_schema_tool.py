@@ -11,7 +11,7 @@ def read_schema_tool(table_name) -> str:
     """
 
     try:
-        with open("tools/tables_schema.json", 'r') as file:
+        with open("src/tools/tables_schema.json", 'r') as file:
             data = json.load(file)
         
         for x in data:
@@ -32,7 +32,7 @@ def get_tables():
     get the list of tables that are available to answer the user query
     """
 
-    with open("tools/tables_schema.json", 'r') as file:
+    with open("src/tools/tables_schema.json", 'r') as file:
         data = json.load(file)
     
     table_name_with_desc = []
