@@ -1,51 +1,73 @@
-from strands import tool
+from pathlib import Path
+from langchain_core.tools import tool
 import json
 
+SCHEMA_PATH = Path(__file__).parent.parent / "tables_schema.json"
+
+# Module-level cache – loaded once on first access, stays in memory.
+_schema_cache: list | None = None
+
+
+def _load_schema() -> list:
+    """Return the cached schema list, reading from disk only on first call."""
+    global _schema_cache
+    if _schema_cache is None:
+        with open(SCHEMA_PATH, "r") as file:
+            _schema_cache = json.load(file)
+    return _schema_cache
+
+
 @tool
-def read_schema_tool(table_name) -> str:
+def read_schema_tool(table_name: str) -> str:
     """
-    Reads the schema of a billing data table and returns a description of each column.
+    Reads the schema of a specific table and returns its columns and relationships.
+
+    Args:
+        table_name: Name of the table to look up.
 
     Returns:
-        A string describing the schema of the billing data table.
+        A dict with 'columns' and 'relationships' for the table, or an error message.
     """
-
     try:
-        with open("src/tools/tables_schema.json", 'r') as file:
-            data = json.load(file)
-        
-        for x in data:
-            if x['table_name'] == table_name:
-                return x['columns']
-        
-        return "Pass a valid table_name"
-    
+        data = _load_schema()
+
+        for table in data:
+            if table["table_name"] == table_name:
+                result = {"columns": table["columns"]}
+                if table.get("relationships"):
+                    result["relationships"] = table["relationships"]
+                return json.dumps(result)
+
+        available = [t["table_name"] for t in data]
+        return f"Table '{table_name}' not found. Available tables: {available}"
+
     except Exception as e:
-        print(e)
-
-
+        return f"Error reading schema: {e}"
 
 
 @tool
-def get_tables():
+def get_tables() -> str:
     """
-    get the list of tables that are available to answer the user query
+    Get a lightweight list of tables in the database: name, description,
+    column names (just names, not full details), and foreign-key relationships.
+    Use read_schema_tool to get full column details for a specific table.
     """
+    try:
+        data = _load_schema()
 
-    with open("src/tools/tables_schema.json", 'r') as file:
-        data = json.load(file)
-    
-    table_name_with_desc = []
-    for x in data:
-        table_name_with_desc.append(
-            {
-                "table_name" :x['table_name'],
-                "description":x['description']
+        tables_summary = []
+        for table in data:
+            entry = {
+                "table_name": table["table_name"],
+                "description": table["description"],
+                "columns": [c["column_name"] for c in table.get("columns", [])],
             }
-        )
+            if table.get("relationships"):
+                entry["relationships"] = table["relationships"]
+            tables_summary.append(entry)
 
+        return json.dumps(tables_summary)
 
-    return table_name_with_desc
-        
+    except Exception as e:
+        return f"Error loading tables: {e}"
 
-# print(read_schema_tool('cars'))

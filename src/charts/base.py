@@ -1,13 +1,15 @@
 import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend to avoid thread issues
 import matplotlib.pyplot as plt
-import io
 import psycopg2
-import base64
 import pandas as pd
 import os
 import time
+from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+# Absolute path to project root (Building_bot/) so charts always land in one place
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 def get_data_from_query(query: str) -> pd.DataFrame:
     """Executes a SQL query and returns a pandas DataFrame."""
@@ -41,29 +43,25 @@ def get_data_from_query(query: str) -> pd.DataFrame:
 
 
 def fig_to_base64(fig, title: Optional[str] = None):
-    """Converts a matplotlib figure to a base64 encoded PNG string and saves it to a file."""
-    # Ensure directory exists
-    output_dir = "generated_charts"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    
-    # Generate filename
+    """Saves a matplotlib figure to disk and returns the file path.
+
+    The function name is kept for backward compatibility with all chart modules.
+    """
+    output_dir = _PROJECT_ROOT / "generated_charts"
+    output_dir.mkdir(exist_ok=True)
+
     if title:
-        # Sanitize title for filename
         clean_title = "".join([c if c.isalnum() else "_" for c in title])
         filename = f"{clean_title}_{int(time.time())}.png"
     else:
         filename = f"chart_{int(time.time())}.png"
-    
-    filepath = os.path.join(output_dir, filename)
-    fig.savefig(filepath, format='png', bbox_inches='tight')
-    
-    buf = io.BytesIO()
-    fig.savefig(buf, format='png', bbox_inches='tight')
-    buf.seek(0)
-    img_str = base64.b64encode(buf.read()).decode('utf-8')
+
+    filepath = output_dir / filename
+    fig.savefig(str(filepath), format='png', bbox_inches='tight', dpi=150)
     plt.close(fig)
-    return f"data:image/png;base64,{img_str}"
+
+    # Return relative path from project root — backend serves it as /charts/<filename>
+    return f"generated_charts/{filename}"
 
 def apply_common_style(ax, title=None, xlabel=None, ylabel=None, theme="default"):
     """Applies common styling to a matplotlib axis."""

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-dim: #1f6feb;
+      --success: #3fb950;
+      --error: #f85149;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    h1 { font-size: 1.25rem; font-weight: 600; }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+      gap: 1rem;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .message {
+      display: flex;
+      gap: 0.75rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user { flex-direction: row-reverse; }
+
+    .message-avatar {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .message.user .message-avatar { background: var(--accent-dim); }
+    .message.assistant .message-avatar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .message-content { flex: 1; min-width: 0; }
+
+    .message-body {
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+    }
+
+    .message.user .message-body {
+      background: var(--accent-dim);
+      color: white;
+    }
+
+    .message.assistant .message-body {
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .message-body pre, .message-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+    }
+
+    .message-body pre {
+      background: var(--bg);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 0.5rem 0;
+    }
+
+    .message-body code:not(pre code) {
+      background: rgba(110, 118, 129, 0.15);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+
+    .message-body table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.75rem 0;
+      font-size: 0.88rem;
+    }
+
+    .message-body th, .message-body td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+
+    .message-body th {
+      background: rgba(110, 118, 129, 0.12);
+      font-weight: 600;
+    }
+
+    .message-body tr:nth-child(even) {
+      background: rgba(110, 118, 129, 0.05);
+    }
+
+    .message-body blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 0.25rem 0.75rem;
+      margin: 0.5rem 0;
+      color: var(--text-muted);
+    }
+
+    .message-body ul, .message-body ol {
+      padding-left: 1.5rem;
+      margin: 0.4rem 0;
+    }
+
+    .message-body li { margin: 0.2rem 0; }
+
+    .message-body h1, .message-body h2, .message-body h3,
+    .message-body h4, .message-body h5, .message-body h6 {
+      margin: 0.75rem 0 0.35rem;
+      line-height: 1.3;
+    }
+
+    .message-body p { margin: 0.35rem 0; }
+
+    .message-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0.75rem 0;
+    }
+
+    .chart-image {
+      display: block;
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 0.75rem 0;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .reasoning-block {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(110, 118, 129, 0.2);
+    }
+
+    .reasoning-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: none;
+      border: none;
+      color: #6e7681;
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 0.2rem 0;
+      font-family: inherit;
+    }
+
+    .reasoning-toggle:hover { color: var(--accent); }
+
+    .reasoning-toggle .arrow {
+      display: inline-block;
+      transition: transform 0.2s;
+      font-size: 0.65rem;
+    }
+
+    .reasoning-block.collapsed .arrow { transform: rotate(-90deg); }
+
+    .reasoning-content {
+      font-size: 0.8rem;
+      color: #6e7681;
+      line-height: 1.5;
+      padding: 0.5rem 0.75rem;
+      background: rgba(110, 118, 129, 0.08);
+      border-radius: 6px;
+      margin-top: 0.25rem;
+      white-space: pre-wrap;
+      max-height: 180px;
+      overflow-y: auto;
+      border-left: 2px solid rgba(110, 118, 129, 0.3);
+    }
+
+    .reasoning-block.collapsed .reasoning-content {
+      display: none;
+    }
+
+    .reasoning-block:not(.has-content) { display: none; }
+
+    .input-area { display: flex; gap: 0.75rem; padding: 0.5rem 0; }
+
+    .input-wrapper { flex: 1; position: relative; }
+
+    #input {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 1rem;
+      resize: none;
+      min-height: 52px;
+      max-height: 160px;
+      transition: border-color 0.2s;
+    }
+
+    #input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+    }
+
+    #input::placeholder { color: var(--text-muted); }
+
+    #send {
+      padding: 1rem 1.5rem;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      align-self: flex-end;
+    }
+
+    #send:hover:not(:disabled) { background: #4090ff; }
+    #send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .typing {
+      display: flex;
+      gap: 4px;
+      padding: 1rem;
+    }
+
+    .typing span {
+      width: 6px; height: 6px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: bounce 1.4s ease-in-out infinite;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding: 0.25rem 0;
+    }
+
+    .status.connected { color: var(--success); }
+    .status.error { color: var(--error); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">◇</div>
+    <h1>Data Analysis</h1>
+  </header>
+
+  <main>
+    <div class="messages" id="messages">
+      <div class="message assistant">
+        <div class="message-avatar">◇</div>
+        <div class="message-content">
+          <div class="message-body">
+            Ask anything about your data. I can analyze tables and run queries.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status" id="status">Connecting…</div>
+    <div class="input-area">
+      <div class="input-wrapper">
+        <textarea id="input" placeholder="e.g. What are the top 10 movies by rating?" rows="1"></textarea>
+      </div>
+      <button id="send" type="button">Send</button>
+    </div>
+  </main>
+
+  <script>
+    const messagesEl = document.getElementById('messages');
+    const inputEl = document.getElementById('input');
+    const sendBtn = document.getElementById('send');
+    const statusEl = document.getElementById('status');
+
+    const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    let ws;
+
+    function setStatus(text, type = '') {
+      statusEl.textContent = text;
+      statusEl.className = 'status ' + type;
+    }
+
+    /* ── Markdown rendering setup ── */
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      highlight: function (code, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          return hljs.highlight(code, { language: lang }).value;
+        }
+        return hljs.highlightAuto(code).value;
+      }
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function renderMarkdown(rawText) {
+      return marked.parse(rawText);
+    }
+
+    function formatContent(text) {
+      return renderMarkdown(text);
+    }
+
+    /* Debounced markdown re-render during streaming */
+    let _renderTimers = new WeakMap();
+
+    function scheduleRender(container, rawBuffer, delay = 80) {
+      let timer = _renderTimers.get(container);
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        const atBottom = messagesEl.scrollHeight - messagesEl.scrollTop <= messagesEl.clientHeight + 50;
+        container.innerHTML = renderMarkdown(rawBuffer.value);
+        if (atBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
+      }, delay);
+      _renderTimers.set(container, timer);
+    }
+
+    function flushRender(container, rawBuffer) {
+      let timer = _renderTimers.get(container);
+      if (timer) clearTimeout(timer);
+      _renderTimers.delete(container);
+      const atBottom = messagesEl.scrollHeight - messagesEl.scrollTop <= messagesEl.clientHeight + 50;
+      container.innerHTML = renderMarkdown(rawBuffer.value);
+      /* Re-highlight any code blocks for final pass */
+      container.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+      if (atBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function appendChunkToReasoning(container, chunk) {
+      const atBottom = messagesEl.scrollHeight - messagesEl.scrollTop <= messagesEl.clientHeight + 50;
+      let html = escapeHtml(chunk);
+      html = html.replace(/\n/g, '<br>');
+      container.innerHTML += html;
+      if (atBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    const agentLabels = {
+      main_agent: 'Main Agent',
+      research_agent: 'Research Agent',
+      visualization_agent: 'Visualization Agent'
+    };
+
+    function createStreamingMessage() {
+      const msg = document.createElement('div');
+      msg.className = 'message assistant';
+      msg.innerHTML = `
+        <div class="message-avatar">◇</div>
+        <div class="message-content">
+          <div class="message-body">
+            <div class="message-output" data-content-box></div>
+            <div class="chart-container"></div>
+            <div class="reasoning-block" id="reasoning-${Date.now()}">
+              <button class="reasoning-toggle" type="button">
+                <span class="arrow">▼</span> <span class="reasoning-label">Show reasoning</span>
+              </button>
+              <div class="reasoning-content"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      messagesEl.appendChild(msg);
+      msg.scrollIntoView({ behavior: 'smooth' });
+
+      const reasoningBlock = msg.querySelector('.reasoning-block');
+      const reasoningContent = msg.querySelector('.reasoning-content');
+      const messageBody = msg.querySelector('.message-output');
+      const chartContainer = msg.querySelector('.chart-container');
+      const toggle = msg.querySelector('.reasoning-toggle');
+
+      const label = toggle.querySelector('.reasoning-label');
+      toggle.addEventListener('click', () => {
+        reasoningBlock.classList.toggle('collapsed');
+        const isCollapsed = reasoningBlock.classList.contains('collapsed');
+        toggle.querySelector('.arrow').textContent = isCollapsed ? '▶' : '▼';
+        label.textContent = isCollapsed ? 'Show reasoning' : 'Hide reasoning';
+      });
+
+      const currentAgent = { value: null };
+      const rawBuffer = { value: '' };           // accumulates raw markdown text
+
+      return {
+        appendChunk: (c) => {
+          rawBuffer.value += c;
+          scheduleRender(messageBody, rawBuffer);
+        },
+        appendChart: (chartUrl) => {
+          const img = document.createElement('img');
+          img.src = chartUrl;
+          img.className = 'chart-image';
+          img.alt = 'Generated chart';
+          chartContainer.appendChild(img);
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        },
+        flushMarkdown: () => {
+          // Strip chart file paths from the text so they don't render as raw text
+          rawBuffer.value = rawBuffer.value.replace(/generated_charts[\\/][^\s"'<>]+\.png/g, '').trim();
+          flushRender(messageBody, rawBuffer);
+        },
+        appendReasoning: (r, agent) => {
+          reasoningBlock.classList.add('has-content');
+          const lbl = agent ? (agentLabels[agent] || agent) : null;
+          if (lbl && currentAgent.value !== agent) {
+            if (reasoningContent.textContent) reasoningContent.innerHTML += '<br>';
+            const span = document.createElement('span');
+            span.className = 'reasoning-agent-label';
+            span.style.cssText = 'display:block;font-weight:600;color:var(--accent);margin:0.5rem 0 0.25rem;';
+            span.textContent = lbl + ':';
+            reasoningContent.appendChild(span);
+            currentAgent.value = agent;
+          }
+          appendChunkToReasoning(reasoningContent, r);
+        },
+        collapseReasoning: () => {
+          if (reasoningContent.textContent.trim()) {
+            reasoningBlock.classList.add('collapsed', 'has-content');
+            toggle.querySelector('.arrow').textContent = '▶';
+            label.textContent = 'Show reasoning';
+          } else {
+            reasoningBlock.classList.remove('has-content');
+          }
+        }
+      };
+    }
+
+    function handleMessage(e) {
+      const msg = JSON.parse(e.data);
+      switch (msg.type) {
+        case 'chunk':
+          removeTyping();
+          if (!currentStreaming) {
+            currentStreaming = createStreamingMessage();
+          }
+          currentStreaming.appendChunk(msg.data);
+          break;
+        case 'reasoning':
+          removeTyping();
+          if (!currentStreaming) {
+            currentStreaming = createStreamingMessage();
+          }
+          currentStreaming.appendReasoning(msg.data, msg.agent);
+          break;
+        case 'chart':
+          removeTyping();
+          if (!currentStreaming) {
+            currentStreaming = createStreamingMessage();
+          }
+          currentStreaming.appendChart(msg.data);
+          break;
+        case 'done':
+        case 'error':
+          removeTyping();
+          if (msg.type === 'error') {
+            addMessage('assistant', `<span style="color: var(--error)">Error: ${escapeHtml(msg.message)}</span>`);
+          } else if (currentStreaming) {
+            currentStreaming.flushMarkdown();
+            currentStreaming.collapseReasoning();
+          }
+          currentStreaming = null;
+          sendBtn.disabled = false;
+          inputEl.disabled = false;
+          break;
+      }
+    }
+
+    function connect() {
+      ws = new WebSocket(`${wsProtocol}//${location.host}/ws`);
+      ws.onopen = () => {
+        setStatus('Connected', 'connected');
+        sendBtn.disabled = false;
+      };
+      ws.onclose = () => {
+        setStatus('Disconnected — reconnecting…', '');
+        sendBtn.disabled = true;
+        setTimeout(connect, 3000);
+      };
+      ws.onerror = () => setStatus('Connection error', 'error');
+      ws.onmessage = handleMessage;
+    }
+    sendBtn.disabled = true;
+    connect();
+
+    let currentStreaming = null;
+
+    sendBtn.addEventListener('click', send);
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        send();
+      }
+    });
+
+    function removeTyping() {
+      const el = document.querySelector('.message .typing');
+      if (el) el.closest('.message').remove();
+    }
+
+    function send() {
+      const text = inputEl.value.trim();
+      if (!text || sendBtn.disabled) return;
+
+      addMessage('user', formatContent(text));
+      inputEl.value = '';
+      inputEl.style.height = 'auto';
+
+      const typing = document.createElement('div');
+      typing.className = 'message assistant';
+      typing.innerHTML = `
+        <div class="message-avatar">◇</div>
+        <div class="message-content">
+          <div class="message-body typing"><span></span><span></span><span></span></div>
+        </div>
+      `;
+      messagesEl.appendChild(typing);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      sendBtn.disabled = true;
+      inputEl.disabled = true;
+      currentStreaming = null;
+
+      if (ws?.readyState === WebSocket.OPEN) {
+        ws.send(text);
+      } else {
+        addMessage('assistant', '<span style="color: var(--error)">Not connected. Please wait for reconnection.</span>');
+        sendBtn.disabled = false;
+        inputEl.disabled = false;
+      }
+    }
+
+    function addMessage(role, content) {
+      const msg = document.createElement('div');
+      msg.className = `message ${role}`;
+      const avatar = role === 'user' ? '👤' : '◇';
+      msg.innerHTML = `
+        <div class="message-avatar">${avatar}</div>
+        <div class="message-content">
+          <div class="message-body">${content}</div>
+        </div>
+      `;
+      messagesEl.appendChild(msg);
+      msg.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    inputEl.addEventListener('input', () => {
+      inputEl.style.height = 'auto';
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 160) + 'px';
+    });
+  </script>
+</body>
+</html>

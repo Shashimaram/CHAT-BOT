@@ -219,3 +219,4 @@ __marimo__/
 .env
 streamlit_env/
 generated_charts/
+data

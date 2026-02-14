@@ -1,4 +1,4 @@
-from strands import tool
+from langchain_core.tools import tool
 from typing import List, Dict, Any, Optional
 import matplotlib.pyplot as plt
 from .base import fig_to_base64, apply_common_style, get_data_from_query
