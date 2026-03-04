@@ -223,8 +223,6 @@ streamlit_env/
 generated_charts/
 data
 
-# Large media files
-*.mp4
+# Large media files (tracked via Git LFS instead)
 *.mov
 *.avi
-resource/
