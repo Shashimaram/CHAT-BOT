@@ -1,48 +1,32 @@
-# CHAT-BOT
+# AI Data Analytics Chatbot
 
-## Overview
-Welcome to the CHAT-BOT project! This project aims to create an intelligent chatbot that can assist users by answering questions, providing information, and engaging in conversation.
+An AI-powered chatbot that lets you query and visualize your database using plain English — no SQL needed.
 
-## Features
-- Natural Language Processing (NLP) capabilities
-- User-friendly interface
-- Multi-platform support
-- Scalable architecture
+## Architecture
 
-## Technologies Used
-- Python
-- Flask
-- TensorFlow
-- HTML/CSS/JavaScript
+![Multi-Agent Architecture](resources/architecture.png)
 
-## Installation Instructions
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Shashimaram/CHAT-BOT.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd CHAT-BOT
-   ```
-3. Install the required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## How it works
 
-## Usage
-1. Run the application:
-   ```bash
-   python app.py
-   ```
-2. Open your browser and navigate to `http://localhost:5000`
-3. Start interacting with the chatbot!
+A **Supervisor Agent** receives the user's question and delegates to the right specialist:
 
-## Contributing
-We welcome contributions! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for more information on how to get started.
+- **Research Agent** — writes and executes SQL queries against the database
+- **Visualization Agent** — generates charts from query results (16 chart types)
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Tech Stack
 
-## Acknowledgments
-- Thanks to all contributors for their efforts!
-- Special thanks to the open-source community for providing invaluable resources.
+- **FastAPI** — WebSocket backend with real-time streaming
+- **LangGraph / LangChain** — multi-agent orchestration
+- **AWS Bedrock** — LLM backbone
+- **SQLite** — session/chat history storage
+
+## Getting Started
+
+```bash
+git clone https://github.com/Shashimaram/Building_bot.git
+cd Building_bot
+pip install -r requirements.txt
+python app.py
+```
+
+Open `http://localhost:8000` and start chatting with your data.
