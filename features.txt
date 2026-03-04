@@ -1,0 +1,10 @@
+Priority | What                                | Why                                         | Status  | Files to Change
+---------+-------------------------------------+---------------------------------------------+---------+------------------------------------------
+P0       | Connection pooling + query timeout  | Prevents DB from dying under load           | Pending | src/tools/execute_query.py
+P0       | SQL retry with error feedback        | Biggest accuracy win for minimal effort     | Pending | src/agents/research_agent.py
+P1       | Schema filtering (embedding-based)   | Enables scaling beyond 10 tables            | Pending | src/tools/read_schema_tool.py (new: src/tools/schema_search.py)
+P1       | Planner agent with decomposition     | Handles complex multi-table questions       | Pending | new: src/agents/planner_agent.py, src/superviser.py
+P2       | Query result caching                 | Reduces latency and DB load                 | Pending | src/tools/execute_query.py
+P2       | Persistent checkpointing             | Production reliability                      | Pending | src/superviser.py
+P3       | EXPLAIN-based cost estimation         | Prevents runaway queries                    | Pending | src/tools/execute_query.py
+P3       | Observability / tracing              | Essential for debugging in production       | Pending | app.py, all agents

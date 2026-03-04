@@ -21,6 +21,7 @@
       --accent-dim: #1f6feb;
       --success: #3fb950;
       --error: #f85149;
+      --sidebar-w: 280px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,6 +44,20 @@
       gap: 0.75rem;
     }
 
+    .sidebar-toggle {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .sidebar-toggle:hover { background: rgba(110,118,129,0.15); color: var(--text); }
+
     .logo {
       width: 32px; height: 32px;
       background: var(--accent);
@@ -55,6 +70,115 @@
 
     h1 { font-size: 1.25rem; font-weight: 600; }
 
+    /* ── Layout ── */
+
+    .app-container {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: margin-left 0.25s ease;
+    }
+
+    .sidebar.collapsed { margin-left: calc(var(--sidebar-w) * -1); }
+
+    .sidebar-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .new-chat-btn {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .new-chat-btn:hover { background: rgba(110,118,129,0.12); border-color: var(--accent); }
+
+    .session-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+
+    .session-item {
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 2px;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .session-item:hover { background: rgba(110,118,129,0.1); }
+
+    .session-item.active {
+      background: rgba(88,166,255,0.1);
+      border-left: 2px solid var(--accent);
+    }
+
+    .session-item .preview {
+      font-size: 0.84rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .session-item .time {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .session-item .delete-btn {
+      position: absolute;
+      top: 0.45rem;
+      right: 0.45rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      opacity: 0;
+      font-size: 0.72rem;
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+      transition: opacity 0.15s, color 0.15s;
+    }
+
+    .session-item:hover .delete-btn { opacity: 1; }
+    .session-item .delete-btn:hover { color: var(--error); background: rgba(248,81,73,0.1); }
+
+    .sessions-empty {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    /* ── Main ── */
+
     main {
       flex: 1;
       display: flex;
@@ -64,6 +188,7 @@
       margin: 0 auto;
       padding: 1.5rem;
       gap: 1rem;
+      overflow: hidden;
     }
 
     .messages {
@@ -192,14 +317,69 @@
       margin: 0.75rem 0;
     }
 
-    .chart-image {
-      display: block;
-      max-width: 100%;
-      border-radius: 8px;
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
       margin: 0.75rem 0;
-      border: 1px solid var(--border);
-      background: #fff;
     }
+
+    .chart-thumb {
+      cursor: pointer;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: #fff;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .chart-thumb:hover {
+      border-color: var(--accent);
+      transform: scale(1.03);
+    }
+
+    .chart-thumb img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .chart-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.85);
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .chart-lightbox.open { display: flex; }
+
+    .chart-lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .chart-lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .chart-lightbox-close:hover { opacity: 1; }
 
     .reasoning-block {
       margin-top: 1rem;
@@ -249,6 +429,46 @@
     }
 
     .reasoning-block:not(.has-content) { display: none; }
+
+    .tasks-split-block {
+      margin: 1rem 0 0.75rem;
+      padding: 0.75rem 0;
+      border-top: 1px solid rgba(110, 118, 129, 0.2);
+    }
+
+    .tasks-split-block .tasks-split-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .tasks-split-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .task-card {
+      background: rgba(110, 118, 129, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.65rem 0.9rem;
+      border-left: 3px solid var(--accent);
+    }
+
+    .task-card .task-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .task-card .task-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
 
     .input-area { display: flex; gap: 0.75rem; padding: 0.5rem 0; }
 
@@ -321,50 +541,215 @@
 
     .status.connected { color: var(--success); }
     .status.error { color: var(--error); }
+
+    /* ── Mobile ── */
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 200;
+        margin-left: 0 !important;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+      }
+
+      .sidebar.mobile-open { transform: translateX(0); }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 199;
+      }
+
+      .sidebar-overlay.visible { display: block; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">◇</div>
+    <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">&#9776;</button>
+    <div class="logo">&#9671;</div>
     <h1>Data Analysis</h1>
   </header>
 
-  <main>
-    <div class="messages" id="messages">
-      <div class="message assistant">
-        <div class="message-avatar">◇</div>
-        <div class="message-content">
-          <div class="message-body">
-            Ask anything about your data. I can analyze tables and run queries.
+  <div class="app-container">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button class="new-chat-btn" id="newChatBtn">+ New Chat</button>
+      </div>
+      <div class="session-list" id="sessionList">
+        <div class="sessions-empty">No previous chats</div>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main>
+      <div class="messages" id="messages">
+        <div class="message assistant">
+          <div class="message-avatar">&#9671;</div>
+          <div class="message-content">
+            <div class="message-body">
+              Ask anything about your data. I can analyze tables and run queries.
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="status" id="status">Connecting…</div>
-    <div class="input-area">
-      <div class="input-wrapper">
-        <textarea id="input" placeholder="e.g. What are the top 10 movies by rating?" rows="1"></textarea>
+      <div class="status" id="status">Connecting&hellip;</div>
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea id="input" placeholder="e.g. What are the top 10 movies by rating?" rows="1"></textarea>
+        </div>
+        <button id="send" type="button">Send</button>
       </div>
-      <button id="send" type="button">Send</button>
-    </div>
-  </main>
+    </main>
+  </div>
+
+  <div class="chart-lightbox" id="chartLightbox">
+    <button class="chart-lightbox-close" id="lightboxClose">&times;</button>
+    <img id="lightboxImg" src="" alt="Chart full view">
+  </div>
 
   <script>
     const messagesEl = document.getElementById('messages');
-    const inputEl = document.getElementById('input');
-    const sendBtn = document.getElementById('send');
-    const statusEl = document.getElementById('status');
+    const inputEl    = document.getElementById('input');
+    const sendBtn    = document.getElementById('send');
+    const statusEl   = document.getElementById('status');
+    const sidebar    = document.getElementById('sidebar');
+    const overlay    = document.getElementById('sidebarOverlay');
+    const sessionListEl = document.getElementById('sessionList');
 
     const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
     let ws;
+    let currentSessionId = null;
+
+    /* ── Status ── */
 
     function setStatus(text, type = '') {
       statusEl.textContent = text;
       statusEl.className = 'status ' + type;
     }
 
-    /* ── Markdown rendering setup ── */
+    /* ── Sidebar toggle ── */
+
+    document.getElementById('sidebarToggle').addEventListener('click', () => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        sidebar.classList.toggle('mobile-open');
+        overlay.classList.toggle('visible');
+      } else {
+        sidebar.classList.toggle('collapsed');
+      }
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('visible');
+    });
+
+    /* ── Session management ── */
+
+    document.getElementById('newChatBtn').addEventListener('click', () => {
+      startNewChat();
+      closeMobileSidebar();
+    });
+
+    function closeMobileSidebar() {
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('visible');
+    }
+
+    async function loadSessions() {
+      try {
+        const res = await fetch('/sessions');
+        const sessions = await res.json();
+        renderSessions(sessions);
+      } catch (e) {
+        console.error('Failed to load sessions:', e);
+      }
+    }
+
+    function renderSessions(sessions) {
+      if (!sessions.length) {
+        sessionListEl.innerHTML = '<div class="sessions-empty">No previous chats</div>';
+        return;
+      }
+      sessionListEl.innerHTML = '';
+      sessions.forEach(s => {
+        const item = document.createElement('div');
+        item.className = 'session-item' + (s.session_id === currentSessionId ? ' active' : '');
+        item.innerHTML = `
+          <div class="preview">${escapeHtml(s.preview)}</div>
+          <div class="time">${formatRelativeTime(s.last_active)}</div>
+          <button class="delete-btn" title="Delete">&times;</button>
+        `;
+        item.querySelector('.delete-btn').addEventListener('click', async (e) => {
+          e.stopPropagation();
+          await deleteSessionById(s.session_id);
+        });
+        item.addEventListener('click', () => {
+          switchSession(s.session_id);
+          closeMobileSidebar();
+        });
+        sessionListEl.appendChild(item);
+      });
+    }
+
+    function switchSession(sessionId) {
+      clearMessages();
+      connectWebSocket(sessionId);
+    }
+
+    function startNewChat() {
+      currentSessionId = null;
+      clearMessages();
+      connectWebSocket(null);
+    }
+
+    async function deleteSessionById(sessionId) {
+      try {
+        await fetch(`/sessions/${sessionId}`, { method: 'DELETE' });
+        if (sessionId === currentSessionId) startNewChat();
+        else loadSessions();
+      } catch (e) {
+        console.error('Delete failed:', e);
+      }
+    }
+
+    function clearMessages() {
+      messagesEl.innerHTML = `
+        <div class="message assistant">
+          <div class="message-avatar">&#9671;</div>
+          <div class="message-content">
+            <div class="message-body">
+              Ask anything about your data. I can analyze tables and run queries.
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function formatRelativeTime(iso) {
+      if (!iso) return '';
+      const diff = Date.now() - new Date(iso).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return 'Just now';
+      if (mins < 60) return mins + 'm ago';
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return hrs + 'h ago';
+      const days = Math.floor(hrs / 24);
+      if (days < 7) return days + 'd ago';
+      return new Date(iso).toLocaleDateString();
+    }
+
+    /* ── Markdown rendering ── */
+
     marked.setOptions({
       breaks: true,
       gfm: true,
@@ -382,15 +767,9 @@
       return div.innerHTML;
     }
 
-    function renderMarkdown(rawText) {
-      return marked.parse(rawText);
-    }
+    function renderMarkdown(rawText) { return marked.parse(rawText); }
+    function formatContent(text) { return renderMarkdown(text); }
 
-    function formatContent(text) {
-      return renderMarkdown(text);
-    }
-
-    /* Debounced markdown re-render during streaming */
     let _renderTimers = new WeakMap();
 
     function scheduleRender(container, rawBuffer, delay = 80) {
@@ -410,15 +789,13 @@
       _renderTimers.delete(container);
       const atBottom = messagesEl.scrollHeight - messagesEl.scrollTop <= messagesEl.clientHeight + 50;
       container.innerHTML = renderMarkdown(rawBuffer.value);
-      /* Re-highlight any code blocks for final pass */
       container.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
       if (atBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
     function appendChunkToReasoning(container, chunk) {
       const atBottom = messagesEl.scrollHeight - messagesEl.scrollTop <= messagesEl.clientHeight + 50;
-      let html = escapeHtml(chunk);
-      html = html.replace(/\n/g, '<br>');
+      let html = escapeHtml(chunk).replace(/\n/g, '<br>');
       container.innerHTML += html;
       if (atBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
     }
@@ -426,21 +803,23 @@
     const agentLabels = {
       main_agent: 'Main Agent',
       research_agent: 'Research Agent',
-      visualization_agent: 'Visualization Agent'
+      visualization_agent: 'Visualization Agent',
+      deep_research_agent: 'Deep Research Agent'
     };
 
     function createStreamingMessage() {
       const msg = document.createElement('div');
       msg.className = 'message assistant';
       msg.innerHTML = `
-        <div class="message-avatar">◇</div>
+        <div class="message-avatar">&#9671;</div>
         <div class="message-content">
           <div class="message-body">
+            <div class="tasks-split-container"></div>
             <div class="message-output" data-content-box></div>
             <div class="chart-container"></div>
             <div class="reasoning-block" id="reasoning-${Date.now()}">
               <button class="reasoning-toggle" type="button">
-                <span class="arrow">▼</span> <span class="reasoning-label">Show reasoning</span>
+                <span class="arrow">&#9660;</span> <span class="reasoning-label">Hide reasoning</span>
               </button>
               <div class="reasoning-content"></div>
             </div>
@@ -450,38 +829,66 @@
       messagesEl.appendChild(msg);
       msg.scrollIntoView({ behavior: 'smooth' });
 
-      const reasoningBlock = msg.querySelector('.reasoning-block');
-      const reasoningContent = msg.querySelector('.reasoning-content');
-      const messageBody = msg.querySelector('.message-output');
-      const chartContainer = msg.querySelector('.chart-container');
-      const toggle = msg.querySelector('.reasoning-toggle');
+      const reasoningBlock     = msg.querySelector('.reasoning-block');
+      const reasoningContent   = msg.querySelector('.reasoning-content');
+      const messageBody        = msg.querySelector('.message-output');
+      const chartContainer     = msg.querySelector('.chart-container');
+      const tasksSplitContainer = msg.querySelector('.tasks-split-container');
+      const toggle             = msg.querySelector('.reasoning-toggle');
+      const label              = toggle.querySelector('.reasoning-label');
 
-      const label = toggle.querySelector('.reasoning-label');
       toggle.addEventListener('click', () => {
         reasoningBlock.classList.toggle('collapsed');
         const isCollapsed = reasoningBlock.classList.contains('collapsed');
-        toggle.querySelector('.arrow').textContent = isCollapsed ? '▶' : '▼';
+        toggle.querySelector('.arrow').textContent = isCollapsed ? '\u25B6' : '\u25BC';
         label.textContent = isCollapsed ? 'Show reasoning' : 'Hide reasoning';
       });
 
       const currentAgent = { value: null };
-      const rawBuffer = { value: '' };           // accumulates raw markdown text
+      const rawBuffer    = { value: '' };
 
       return {
         appendChunk: (c) => {
           rawBuffer.value += c;
           scheduleRender(messageBody, rawBuffer);
         },
+        appendTasksSplit: (tasks, agent) => {
+          if (!tasks || !Array.isArray(tasks) || tasks.length === 0) return;
+          const title = agent ? (agentLabels[agent] || agent) : 'Tasks';
+          let block = tasksSplitContainer.querySelector('.tasks-split-block');
+          if (!block) {
+            block = document.createElement('div');
+            block.className = 'tasks-split-block';
+            block.innerHTML = '<div class="tasks-split-title">' + escapeHtml(title) + ' — split tasks</div><div class="tasks-split-list"></div>';
+            tasksSplitContainer.appendChild(block);
+          }
+          const list = block.querySelector('.tasks-split-list');
+          tasks.forEach((t, i) => {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            const name = (t && t.task_name) ? String(t.task_name) : ('Task ' + (i + 1));
+            const desc = (t && t.task_description_in_detail) ? String(t.task_description_in_detail) : '';
+            card.innerHTML = '<div class="task-name">' + escapeHtml(name) + '</div><div class="task-desc">' + escapeHtml(desc) + '</div>';
+            list.appendChild(card);
+          });
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        },
         appendChart: (chartUrl) => {
+          if (!chartContainer.querySelector('.chart-grid')) {
+            chartContainer.innerHTML = '<div class="chart-grid"></div>';
+          }
+          const grid = chartContainer.querySelector('.chart-grid');
+          const thumb = document.createElement('div');
+          thumb.className = 'chart-thumb';
           const img = document.createElement('img');
           img.src = chartUrl;
-          img.className = 'chart-image';
           img.alt = 'Generated chart';
-          chartContainer.appendChild(img);
+          thumb.appendChild(img);
+          thumb.addEventListener('click', () => openLightbox(chartUrl));
+          grid.appendChild(thumb);
           messagesEl.scrollTop = messagesEl.scrollHeight;
         },
         flushMarkdown: () => {
-          // Strip chart file paths from the text so they don't render as raw text
           rawBuffer.value = rawBuffer.value.replace(/generated_charts[\\/][^\s"'<>]+\.png/g, '').trim();
           flushRender(messageBody, rawBuffer);
         },
@@ -502,7 +909,7 @@
         collapseReasoning: () => {
           if (reasoningContent.textContent.trim()) {
             reasoningBlock.classList.add('collapsed', 'has-content');
-            toggle.querySelector('.arrow').textContent = '▶';
+            toggle.querySelector('.arrow').textContent = '\u25B6';
             label.textContent = 'Show reasoning';
           } else {
             reasoningBlock.classList.remove('has-content');
@@ -511,28 +918,42 @@
       };
     }
 
+    /* ── WebSocket ── */
+
+    let currentStreaming = null;
+
     function handleMessage(e) {
       const msg = JSON.parse(e.data);
       switch (msg.type) {
+        case 'session_init':
+          currentSessionId = msg.session_id;
+          if (msg.history && msg.history.length > 0) {
+            clearMessages();
+            msg.history.forEach(m => {
+              const role = m.role === 'user' ? 'user' : 'assistant';
+              addMessage(role, formatContent(m.content));
+            });
+          }
+          loadSessions();
+          break;
         case 'chunk':
           removeTyping();
-          if (!currentStreaming) {
-            currentStreaming = createStreamingMessage();
-          }
+          if (!currentStreaming) currentStreaming = createStreamingMessage();
           currentStreaming.appendChunk(msg.data);
           break;
         case 'reasoning':
           removeTyping();
-          if (!currentStreaming) {
-            currentStreaming = createStreamingMessage();
-          }
+          if (!currentStreaming) currentStreaming = createStreamingMessage();
           currentStreaming.appendReasoning(msg.data, msg.agent);
+          break;
+        case 'tasks_split':
+          removeTyping();
+          if (!currentStreaming) currentStreaming = createStreamingMessage();
+          currentStreaming.appendTasksSplit(msg.data, msg.agent);
           break;
         case 'chart':
           removeTyping();
-          if (!currentStreaming) {
-            currentStreaming = createStreamingMessage();
-          }
+          if (!currentStreaming) currentStreaming = createStreamingMessage();
           currentStreaming.appendChart(msg.data);
           break;
         case 'done':
@@ -547,35 +968,55 @@
           currentStreaming = null;
           sendBtn.disabled = false;
           inputEl.disabled = false;
+          loadSessions();
           break;
       }
     }
 
-    function connect() {
-      ws = new WebSocket(`${wsProtocol}//${location.host}/ws`);
+    function connectWebSocket(sessionId) {
+      if (ws) {
+        ws.onclose = null;
+        ws.close();
+      }
+      const url = sessionId
+        ? `${wsProtocol}//${location.host}/ws?session_id=${sessionId}`
+        : `${wsProtocol}//${location.host}/ws`;
+
+      ws = new WebSocket(url);
       ws.onopen = () => {
         setStatus('Connected', 'connected');
         sendBtn.disabled = false;
       };
       ws.onclose = () => {
-        setStatus('Disconnected — reconnecting…', '');
+        setStatus('Disconnected \u2014 reconnecting\u2026', '');
         sendBtn.disabled = true;
-        setTimeout(connect, 3000);
+        setTimeout(() => connectWebSocket(currentSessionId), 3000);
       };
       ws.onerror = () => setStatus('Connection error', 'error');
       ws.onmessage = handleMessage;
     }
-    sendBtn.disabled = true;
-    connect();
 
-    let currentStreaming = null;
+    sendBtn.disabled = true;
+    connectWebSocket(null);
+
+    /* ── Lightbox ── */
+
+    const lightbox     = document.getElementById('chartLightbox');
+    const lightboxImg  = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    function openLightbox(src)  { lightboxImg.src = src; lightbox.classList.add('open'); }
+    function closeLightbox()    { lightbox.classList.remove('open'); lightboxImg.src = ''; }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+    /* ── Send ── */
 
     sendBtn.addEventListener('click', send);
     inputEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        send();
-      }
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
     });
 
     function removeTyping() {
@@ -594,7 +1035,7 @@
       const typing = document.createElement('div');
       typing.className = 'message assistant';
       typing.innerHTML = `
-        <div class="message-avatar">◇</div>
+        <div class="message-avatar">&#9671;</div>
         <div class="message-content">
           <div class="message-body typing"><span></span><span></span><span></span></div>
         </div>
@@ -618,7 +1059,7 @@
     function addMessage(role, content) {
       const msg = document.createElement('div');
       msg.className = `message ${role}`;
-      const avatar = role === 'user' ? '👤' : '◇';
+      const avatar = role === 'user' ? '&#128100;' : '&#9671;';
       msg.innerHTML = `
         <div class="message-avatar">${avatar}</div>
         <div class="message-content">

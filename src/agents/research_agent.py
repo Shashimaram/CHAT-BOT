@@ -1,9 +1,11 @@
 from langchain_core.tools import tool
+import traceback
+from langchain_core.messages import AIMessageChunk
 from langchain.agents import create_agent
+from langgraph.config import get_stream_writer
 from src.model import bedrock_model
 from src.tools.read_schema_tool import read_schema_tool, get_tables
 from src.tools.execute_query import execute_query
-from src.stream_context import get_stream_sink
 
 RESEARCH_PROMPT = """
 You are a fast SQL research agent. Answer the user's question using the database.
@@ -31,50 +33,30 @@ def _create_research_agent():
     )
 
 
-async def _run_research_agent(question: str) -> str:
-    agent = _create_research_agent()
-    sink = get_stream_sink()
-    result_content = ""
-
-    if sink:
-        async for event in agent.astream_events(
-            {"messages": [{"role": "user", "content": question}]},
-        ):
-            if event.get("event") == "on_chat_model_stream":
-                chunk = event.get("data", {}).get("chunk")
-                if chunk:
-                    text = getattr(chunk, "text", None) or (
-                        chunk.content if isinstance(getattr(chunk, "content", ""), str) else ""
-                    )
-                    if text:
-                        await sink("research_agent", text)
-            elif event.get("event") == "on_chain_end":
-                output = event.get("data", {}).get("output")
-                if output and isinstance(output, dict) and "messages" in output:
-                    msgs = output["messages"]
-                    if msgs:
-                        last = msgs[-1]
-                        result_content = last.content if hasattr(last, "content") else str(last)
-    else:
-        result = await agent.ainvoke({"messages": [{"role": "user", "content": question}]})
-        if result.get("messages"):
-            last_msg = result["messages"][-1]
-            result_content = last_msg.content if hasattr(last_msg, "content") else str(last_msg)
-        else:
-            result_content = str(result)
-
-    return result_content
-
-
 @tool
 async def research_agent(question: str) -> str:
-    """
-    Data research agent that answers user questions by researching using attached tools. If you need to visualize data, use the visualization agent.
-    """
-    import traceback
+    """Data research agent that answers user questions by researching using attached tools. If you need to visualize data, use the visualization agent."""
+    writer = get_stream_writer()
+    writer({"agent": "research_agent", "text": "Researching your question..."})
+
     try:
-        return await _run_research_agent(question)
+        agent = _create_research_agent()
+        result_content = ""
+
+        async for mode, chunk in agent.astream(
+            {"messages": [{"role": "user", "content": question}]},stream_mode=["messages", "updates"],):
+
+            if mode == "messages":
+                token, _ = chunk
+                if isinstance(token, AIMessageChunk) and token.text:
+                    writer({"agent": "research_agent", "text": token.text})
+            elif mode == "updates":
+                for node, update in chunk.items():
+                    if "messages" in update and update["messages"]:
+                        content = update["messages"][-1].content
+                        result_content = content if isinstance(content, str) else str(content)
+
+        return result_content or "No result"
     except Exception as e:
         traceback.print_exc()
         return f"Error: {e}"
-    

@@ -1,35 +1,39 @@
 import json
-import re
-import uuid
 import logging
+from contextlib import asynccontextmanager
 
 logging.getLogger("opentelemetry.context").setLevel(logging.CRITICAL)
 
 from fastapi import FastAPI, WebSocket
 from fastapi.websockets import WebSocketDisconnect
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from src.superviser import main_agent
-from src.stream_context import set_stream_sink, reset_stream_sink
-from langchain_core.messages import AIMessageChunk, ToolMessage
+from src.storage.session_handler import (
+    init_chat_history,
+    create_session,
+    save_user_message,
+    save_ai_message,
+    load_session_messages,
+    list_sessions,
+    delete_session,
+)
+from langchain_core.messages import AIMessageChunk
+import asyncio
 import os
 
-app = FastAPI()
 
-# Serve saved chart images at /charts/<filename>
-# Use absolute path so it works regardless of cwd
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_chat_history()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
+
 _CHARTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generated_charts")
 os.makedirs(_CHARTS_DIR, exist_ok=True)
 app.mount("/charts", StaticFiles(directory=_CHARTS_DIR), name="charts")
-
-# Regex to detect chart file paths returned by visualization tools
-_CHART_PATH_RE = re.compile(r"generated_charts[\\/][^\s\"'<>]+\.png")
-
-
-async def _send_reasoning(websocket: WebSocket, agent: str, text: str) -> None:
-    await websocket.send_text(
-        json.dumps({"type": "reasoning", "data": text, "agent": agent})
-    )
 
 
 def _extract_reasoning_and_text(chunk: AIMessageChunk) -> tuple[str, str]:
@@ -60,7 +64,6 @@ def _extract_reasoning_and_text(chunk: AIMessageChunk) -> tuple[str, str]:
                 if isinstance(txt, str) and txt:
                     output_parts.append(txt)
 
-    # Fallback: unstructured text chunks
     if not output_parts and isinstance(getattr(chunk, "text", None), str):
         txt = chunk.text
         if txt:
@@ -69,60 +72,95 @@ def _extract_reasoning_and_text(chunk: AIMessageChunk) -> tuple[str, str]:
     return "".join(reasoning_parts), "".join(output_parts)
 
 
+
+@app.get("/sessions")
+async def get_sessions():
+    return JSONResponse(content=list_sessions())
+
+
+@app.delete("/sessions/{session_id}")
+async def remove_session(session_id: str):
+    delete_session(session_id)
+    return JSONResponse(content={"status": "deleted"})
+
+
+# ── WebSocket with persistent chat history ──
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
 
-    # Each WebSocket connection gets its own thread — the checkpointer
-    # accumulates the full message history automatically.
-    thread_id = str(uuid.uuid4())
-    config = {"configurable": {"thread_id": thread_id}}
+    session_id = websocket.query_params.get("session_id") or create_session()
+    config = {"configurable": {"thread_id": session_id}}
+
+    history = load_session_messages(session_id)
+    await websocket.send_text(json.dumps({
+        "type": "session_init",
+        "session_id": session_id,
+        "history": history,
+    }))
 
     try:
         while True:
             data = await websocket.receive_text()
+            save_user_message(session_id, data)
+
             try:
-                full_output = []  # accumulate all output text
+                ai_response_parts: list[str] = []
 
-                ctx_token = set_stream_sink(
-                    lambda a, t: _send_reasoning(websocket, a, t)
-                )
-                try:
-                    async for event in main_agent.astream(
-                        {"messages": [{"role": "user", "content": data}]},
-                        config=config,
-                        stream_mode="messages",
-                    ):
-                        if isinstance(event, tuple) and len(event) == 2:
-                            token, _ = event
-                        else:
-                            token = event
+                async for stream_mode, chunk in main_agent.astream(
+                    {"messages": [{"role": "user", "content": data}]},
+                    config=config,
+                    stream_mode=["messages", "custom"],
+                ):
+                    if stream_mode == "messages":
+                        token, metadata = chunk
 
-                        # Stream AI text / reasoning tokens
                         if isinstance(token, AIMessageChunk):
                             reasoning_text, output_text = _extract_reasoning_and_text(token)
                             if reasoning_text:
-                                await _send_reasoning(websocket, "main_agent", reasoning_text)
+                                await websocket.send_text(
+                                    json.dumps({"type": "reasoning", "data": reasoning_text, "agent": "main_agent"})
+                                )
                             if output_text:
-                                full_output.append(output_text)
+                                ai_response_parts.append(output_text)
                                 await websocket.send_text(
                                     json.dumps({"type": "chunk", "data": output_text})
                                 )
 
-                        # Catch tool results that contain chart file paths
-                        elif isinstance(token, ToolMessage):
-                            content = token.content if isinstance(token.content, str) else str(token.content)
-                            chart_paths = _CHART_PATH_RE.findall(content)
-                            for path in chart_paths:
-                                filename = os.path.basename(path)
+                    elif stream_mode == "custom":
+                        if isinstance(chunk, dict):
+                            if "chart" in chunk:
+                                filename = os.path.basename(chunk["chart"])
                                 chart_url = f"/charts/{filename}"
                                 await websocket.send_text(
                                     json.dumps({"type": "chart", "data": chart_url})
                                 )
-                finally:
-                    reset_stream_sink(ctx_token)
+                            elif "tasks" in chunk:
+                                await websocket.send_text(
+                                    json.dumps({
+                                        "type": "tasks_split",
+                                        "data": chunk["tasks"],
+                                        "agent": chunk.get("agent", "deep_research_agent"),
+                                    })
+                                )
+                            elif "text" in chunk:
+                                await websocket.send_text(
+                                    json.dumps({
+                                        "type": "reasoning",
+                                        "data": chunk["text"],
+                                        "agent": chunk.get("agent", "sub_agent"),
+                                    })
+                                )
 
                 await websocket.send_text(json.dumps({"type": "done"}))
+
+                full_response = "".join(ai_response_parts)
+                if full_response:
+                    asyncio.create_task(
+                        asyncio.to_thread(save_ai_message, session_id,full_response)
+                    )
             except Exception as e:
                 await websocket.send_text(
                     json.dumps({"type": "error", "message": str(e)})

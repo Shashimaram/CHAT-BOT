@@ -1,10 +1,11 @@
 import re
 from langchain_core.tools import tool
+from langchain_core.messages import AIMessageChunk
 from langchain.agents import create_agent
+from langgraph.config import get_stream_writer
 from src.model import bedrock_model
 from src.tools.read_schema_tool import read_schema_tool
 from src.tools.execute_query import execute_query
-from src.stream_context import get_stream_sink
 
 _CHART_PATH_RE = re.compile(r"generated_charts[\\/][^\s\"'<>]+\.png")
 from src.charts import (
@@ -66,65 +67,48 @@ def _create_visualization_agent():
     )
 
 
-async def _run_visualization_agent(query: str) -> str:
-    agent = _create_visualization_agent()
-    sink = get_stream_sink()
-    result_content = ""
-    chart_paths: list[str] = []  # collect chart file paths from tool results
-
-    if sink:
-        async for event in agent.astream_events(
-            {"messages": [{"role": "user", "content": query}]},
-        ):
-            if event.get("event") == "on_chat_model_stream":
-                chunk = event.get("data", {}).get("chunk")
-                if chunk:
-                    text = getattr(chunk, "text", None) or (
-                        chunk.content if isinstance(getattr(chunk, "content", ""), str) else ""
-                    )
-                    if text:
-                        await sink("visualization_agent", text)
-            elif event.get("event") == "on_tool_end":
-                # Capture chart file paths from chart tool results
-                output = event.get("data", {}).get("output")
-                if output:
-                    output_str = str(output)
-                    chart_paths.extend(_CHART_PATH_RE.findall(output_str))
-            elif event.get("event") == "on_chain_end":
-                output = event.get("data", {}).get("output")
-                if output and isinstance(output, dict) and "messages" in output:
-                    msgs = output["messages"]
-                    if msgs:
-                        last = msgs[-1]
-                        result_content = last.content if hasattr(last, "content") else str(last)
-    else:
-        result = await agent.ainvoke({"messages": [{"role": "user", "content": query}]})
-        if result.get("messages"):
-            # Scan all messages for chart paths
-            for msg in result["messages"]:
-                content = msg.content if hasattr(msg, "content") else str(msg)
-                if isinstance(content, str):
-                    chart_paths.extend(_CHART_PATH_RE.findall(content))
-            last_msg = result["messages"][-1]
-            result_content = last_msg.content if hasattr(last_msg, "content") else str(last_msg)
-        else:
-            result_content = str(result)
-
-    # Prepend chart paths so the main agent's ToolMessage includes them
-    if chart_paths:
-        paths_str = "\n".join(chart_paths)
-        result_content = f"{paths_str}\n\n{result_content}"
-
-    return result_content
-
-
 @tool
 async def visualization_agent(query: str) -> str:
     """Data visualization agent that visualizes data using available chart tools."""
-    import traceback
+    writer = get_stream_writer()
+    writer({"agent": "visualization_agent", "text": "Creating visualization..."})
+
     try:
-        return await _run_visualization_agent(query)
+        agent = _create_visualization_agent()
+        chart_paths: list[str] = []
+        result_content = ""
+
+        async for mode, chunk in agent.astream(
+            {"messages": [{"role": "user", "content": query}]},
+            stream_mode=["messages", "updates"],
+        ):
+            if mode == "messages":
+                token, metadata = chunk
+                if isinstance(token, AIMessageChunk) and token.text:
+                    writer({"agent": "visualization_agent", "text": token.text})
+            elif mode == "updates":
+                for node, update in chunk.items():
+                    if "messages" not in update:
+                        continue
+                    for msg in update["messages"]:
+                        content = msg.content if hasattr(msg, "content") else str(msg)
+                        if isinstance(content, str):
+                            for path in _CHART_PATH_RE.findall(content):
+                                if path not in chart_paths:
+                                    chart_paths.append(path)
+                                    writer({"agent": "visualization_agent", "chart": path})
+                    if update["messages"]:
+                        last = update["messages"][-1].content
+                        result_content = last if isinstance(last, str) else str(last)
+
+        if chart_paths:
+            paths_str = "\n".join(chart_paths)
+            result_content = f"{paths_str}\n\n{result_content}"
+
+        return result_content or "No result"
     except Exception as e:
+        import traceback
+
         traceback.print_exc()
         return f"Error: {e}"
 
