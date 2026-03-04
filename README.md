@@ -4,7 +4,7 @@ An AI-powered chatbot that lets you query and visualize your database using plai
 
 ## Architecture
 
-![Multi-Agent Architecture](resources/architecture.png)
+![Multi-Agent Architecture](resource/archetecture.png)
 
 ## How it works
 
